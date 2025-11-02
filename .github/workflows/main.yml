@@ -1,0 +1,53 @@
+name: Serenity BDD Automation Pipeline (OrangeHRM)
+
+on:
+
+  push:
+    branches: [ main ]
+
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+
+jobs:
+  run-serenity-tests:
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run UI Tests with Maven on BrowserStack
+
+        run: mvn clean verify -Denvironment=bs_chrome_win '-Dcucumber.filter.tags=@AddNewUser'
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+
+      - name: Upload Serenity Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+
+          name: serenity-report
+
+          path: target/site/serenity
