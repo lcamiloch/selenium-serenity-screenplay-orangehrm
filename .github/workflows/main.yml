@@ -9,6 +9,24 @@ on:
     branches: [ main ]
 
   workflow_dispatch:
+    inputs:
+
+      cucumber_tags:
+        description: 'Cucumber tags to run (e.g., @AddNewUser or @SearchUser)'
+        required: true
+        default: '@LoginSuccess'
+        type: string
+
+      serenity_environment:
+        description: 'Serenity environment to use (e.g., bs_chrome_mac, bs_chrome_win)'
+        required: true
+        default: 'bs_chrome_win'
+        type: string
+
+      test_username:
+        description: '(Optional) Username for the test'
+        required: false
+        type: string
 
 
 permissions:
@@ -42,9 +60,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Run UI Tests with Maven on BrowserStack
+      - name: Run UI Tests with Maven
+        run: |
+          echo "Running tests with environment: ${{ github.event.inputs.serenity_environment }}"
+          echo "Running tests with tags: ${{ github.event.inputs.cucumber_tags }}"
+          mvn clean verify -Dserenity.environment=${{ github.event.inputs.serenity_environment }} '-Dcucumber.filter.tags=${{ github.event.inputs.cucumber_tags }}''
 
-        run: mvn clean verify -Denvironment=bs_chrome_win '-Dcucumber.filter.tags=@AddNewUser'
         env:
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
           BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
