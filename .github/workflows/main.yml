@@ -64,7 +64,7 @@ jobs:
         run: |
           echo "Running tests with environment: ${{ github.event.inputs.serenity_environment }}"
           echo "Running tests with tags: ${{ github.event.inputs.cucumber_tags }}"
-          mvn clean verify -Dserenity.environment=${{ github.event.inputs.serenity_environment }} '-Dcucumber.filter.tags=${{ github.event.inputs.cucumber_tags }}''
+          mvn clean verify -Denvironment=${{ github.event.inputs.serenity_environment }} '-Dcucumber.filter.tags=${{ github.event.inputs.cucumber_tags }}'
 
         env:
           BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
