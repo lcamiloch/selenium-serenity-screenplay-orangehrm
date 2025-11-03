@@ -63,8 +63,8 @@ Sigue estos pasos para configurar y ejecutar el proyecto en tu máquina local.
 
 1.  **Clonar el repositorio:**
     ```bash
-    git clone [URL-DE-TU-REPOSITORIO]
-    cd [NOMBRE-DE-TU-PROYECTO]
+    git clone [https://github.com/lcamiloch/selenium-serenity-screenplay-orangehrm.git]
+    cd [orangeHrmFront]
     ```
 
 2.  **Configurar credenciales (si aplica):**
